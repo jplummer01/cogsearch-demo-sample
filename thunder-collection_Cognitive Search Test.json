@@ -1,0 +1,111 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Cognitive Search Test",
+    "dateExported": "2023-08-08T13:50:58.696Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "1bcb0128-2a90-4712-91c0-93f3606ca8bb",
+            "colId": "cd9eaf0b-c92f-4694-a58b-15eff62a6901",
+            "containerId": "",
+            "name": "1. Create Index with Vector Field",
+            "url": "{{COGSEARCH-ENDPOINT}}/indexes/{{COGSEARCH-INDEX}}?api-version={{COGSEARCH-API-VERSION}}",
+            "method": "PUT",
+            "sortNum": 10000,
+            "created": "2023-08-08T13:16:40.232Z",
+            "modified": "2023-08-08T13:16:40.232Z",
+            "headers": [
+                {
+                    "name": "api-key",
+                    "value": "{{COGSEARCH-API-KEY}}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "params": [
+                {
+                    "name": "api-version",
+                    "value": "{{COGSEARCH-API-VERSION}}",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"{{COGSEARCH-INDEX}}\",\n  \"fields\": [\n    {\"name\": \"id\", \"type\": \"Edm.String\", \"key\": true},\n    {\"name\": \"text\", \"type\": \"Edm.String\", \"searchable\": true},\n    {\"name\": \"category\", \"type\": \"Edm.String\", \"filterable\": true},\n    {\"name\": \"vector1\", \"type\": \"Collection(Edm.Single)\", \"searchable\": true, \"retrievable\":true, \"dimensions\": 3, \"vectorSearchConfiguration\": \"myConfig\"}\n  ],\n  \"vectorSearch\": {\n    \"algorithmConfigurations\": [{\n      \"name\": \"myConfig\",\n      \"kind\": \"hnsw\",\n      \"hnswParameters\": {\n        \"metric\": \"cosine\"\n      }\n    }]\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "5345fd59-74d1-4bec-a320-003213fb5a59",
+            "colId": "cd9eaf0b-c92f-4694-a58b-15eff62a6901",
+            "containerId": "",
+            "name": "2. Upload Documents to Index",
+            "url": "{{COGSEARCH-ENDPOINT}}/indexes/{{COGSEARCH-INDEX}}/docs/index?api-version={{COGSEARCH-API-VERSION}}",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-08-08T13:22:36.979Z",
+            "modified": "2023-08-08T13:33:18.034Z",
+            "headers": [
+                {
+                    "name": "api-key",
+                    "value": "{{COGSEARCH-API-KEY}}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "params": [
+                {
+                    "name": "api-version",
+                    "value": "{{COGSEARCH-API-VERSION}}",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"value\": [\n    {\n      \"@search.action\": \"upload\",\n      \"id\": \"1\",\n      \"text\": \"This is the first document\",\n      \"category\": \"A\",\n      \"vector1\": [1,2,3]\n    },\n    { \n      \"@search.action\": \"upload\",\n      \"id\": \"2\",\n      \"text\": \"The second document is here\",\n      \"category\": \"B\",\n      \"vector1\": [3,2,1]\n    },\n    {\n      \"@search.action\": \"upload\",\n      \"id\": \"3\",\n      \"text\": \"Third and las document\",\n      \"category\": \"C\",\n      \"vector1\": [1,2,2]\n    }\n  ]\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "7d9e4c35-eddb-4f3b-8e08-b6809f6341f3",
+            "colId": "cd9eaf0b-c92f-4694-a58b-15eff62a6901",
+            "containerId": "",
+            "name": "3. Run Vector Queries",
+            "url": "{{COGSEARCH-ENDPOINT}}/indexes/{{COGSEARCH-INDEX}}/docs/search?api-version={{COGSEARCH-API-VERSION}}",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-08-08T13:39:07.624Z",
+            "modified": "2023-08-08T13:44:38.274Z",
+            "headers": [
+                {
+                    "name": "api-key",
+                    "value": "{{COGSEARCH-API-KEY}}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "params": [
+                {
+                    "name": "api-version",
+                    "value": "{{COGSEARCH-API-VERSION}}",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"vector\": {\n    \"value\": [2,2,3],\n    \"k\": 10,\n    \"fields\": \"vector1\"\n  },\n  \"search\": \"second\"\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}
